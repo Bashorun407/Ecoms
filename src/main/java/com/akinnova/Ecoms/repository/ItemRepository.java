@@ -20,4 +20,6 @@ public interface ItemRepository extends JpaRepository<ItemEntity, UUID> {
     @Modifying
     @Query(value = "DELETE FROM cart_item AS ci WHERE ci.item_id in (:item_idList) AND ci.cart_id = :cartId ", nativeQuery = true)
     void deleteCartItemJoinById(@Param("item_idList") List<UUID> item_idList, @Param("cartId") UUID cartId);
+
+    //added comment
 }
