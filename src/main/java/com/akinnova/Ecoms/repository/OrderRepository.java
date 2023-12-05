@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Repository
-public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
+public interface OrderRepository extends JpaRepository<OrderEntity, UUID>, OrderRepositoryExtension {
 
-    @Query("SELECT o FROM OrderEntity o JOIN UserEntity u WHERE u.public_id =: userId")
+    @Query("SELECT o FROM OrderEntity o JOIN o.user u WHERE u.public_id =: userId")
     Optional<List<OrderEntity>> findByUserId(@Param("userId") UUID userId);
 }

@@ -13,12 +13,12 @@ import java.util.UUID;
 
 @Repository
 public interface ItemRepository extends JpaRepository<ItemEntity, UUID> {
-    @Query(value = "SELECT i.* FROM CartEntity AS c, ItemEntity AS i, cart_item AS ci, UserEntity AS u WHERE u.public_id =: userId " +
+    @Query(value = "SELECT i.* FROM CartEntity c, ItemEntity i, cart_item ci, UserEntity u WHERE u.public_id =: userId " +
             "AND  c.userEntity = u.public_id AND c.public_id = ci.cart_id AND i.public_id = ci.item_id", nativeQuery = true)
     Optional<ItemEntity> findByUserId(UUID userId);
 
     @Modifying
-    @Query(value = "DELETE FROM cart_item AS ci WHERE ci.item_id in (:item_idList) AND ci.cart_id = :cartId ", nativeQuery = true)
+    @Query(value = "DELETE FROM cart_item ci WHERE ci.item_id in (:item_idList) AND ci.cart_id = :cartId ", nativeQuery = true)
     void deleteCartItemJoinById(@Param("item_idList") List<UUID> item_idList, @Param("cartId") UUID cartId);
 
     //added comment

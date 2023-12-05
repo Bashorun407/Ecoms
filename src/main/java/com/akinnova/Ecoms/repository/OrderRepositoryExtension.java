@@ -1,7 +1,10 @@
 package com.akinnova.Ecoms.repository;
 
-import org.springframework.stereotype.Repository;
+import com.akinnova.Ecoms.dto.requestDto.NewOrder;
+import com.akinnova.Ecoms.entity.OrderEntity;
 
-@Repository
+import java.util.Optional;
+
 public interface OrderRepositoryExtension {
+    Optional<OrderEntity> insert(NewOrder m);
 }
