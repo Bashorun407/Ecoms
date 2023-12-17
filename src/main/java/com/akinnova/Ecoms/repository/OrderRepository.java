@@ -12,6 +12,6 @@ import java.util.UUID;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, UUID>, OrderRepositoryExtension {
 
-    @Query("SELECT o FROM OrderEntity o JOIN o.user u WHERE u.public_id =: userId")
+    @Query("SELECT o FROM OrderEntity o JOIN o.user u WHERE u.id =: userId")
     Optional<List<OrderEntity>> findByUserId(@Param("userId") UUID userId);
 }

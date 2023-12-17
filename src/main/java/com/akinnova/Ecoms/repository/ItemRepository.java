@@ -13,8 +13,8 @@ import java.util.UUID;
 
 @Repository
 public interface ItemRepository extends JpaRepository<ItemEntity, UUID> {
-    @Query(value = "SELECT i.* FROM CartEntity c, ItemEntity i, cart_item ci, UserEntity u WHERE u.public_id =: userId " +
-            "AND  c.userEntity = u.public_id AND c.public_id = ci.cart_id AND i.public_id = ci.item_id", nativeQuery = true)
+    @Query(value = "SELECT i.* FROM CartEntity c, ItemEntity i, cart_item ci, UserEntity u WHERE u.id =: userId " +
+            "AND  c.userEntity = u.id AND c.id = ci.cart_id AND i.id = ci.item_id", nativeQuery = true)
     Optional<ItemEntity> findByUserId(UUID userId);
 
     @Modifying

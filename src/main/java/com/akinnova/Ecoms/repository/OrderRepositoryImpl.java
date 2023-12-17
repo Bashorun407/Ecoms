@@ -5,6 +5,7 @@ import com.akinnova.Ecoms.entity.CartEntity;
 import com.akinnova.Ecoms.entity.ItemEntity;
 import com.akinnova.Ecoms.entity.OrderEntity;
 import com.akinnova.Ecoms.entity.OrderItemEntity;
+import com.akinnova.Ecoms.enums.StatusEnum;
 import com.akinnova.Ecoms.exception.ApiException;
 import com.akinnova.Ecoms.service.ItemService;
 import jakarta.persistence.EntityManager;
@@ -13,13 +14,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
@@ -30,6 +31,7 @@ public class OrderRepositoryImpl implements OrderRepositoryExtension{
 
     @PersistenceContext
     private EntityManager entityManager;
+
     private ItemRepository itemRepository;
     private AddressRepository addressRepository;
     private CartRepository cartRepository;
@@ -53,7 +55,7 @@ public class OrderRepositoryImpl implements OrderRepositoryExtension{
         // Items are already in cart and saved in db when user places the order
         // Here, you can also populate the other Order details like address, card etc.
 
-        List<ItemEntity> dbItems = itemRepository.findByUserId(m.getUser().getPublic_id()).stream().toList();
+        List<ItemEntity> dbItems = itemRepository.findByUserId(m.getUser().getId()).stream().toList();
         List<ItemEntity> items = StreamSupport.stream(dbItems.spliterator(), false).collect(toList());
 
         if (items.size() < 1) {
@@ -66,32 +68,35 @@ public class OrderRepositoryImpl implements OrderRepositoryExtension{
         for (ItemEntity i : items) {
             total = (BigDecimal.valueOf(i.getQuantity()).multiply(i.getPrice())).add(total);
         }
-//        Timestamp orderDate = Timestamp.from(Instant.now());
-//        em.createNativeQuery("""
-//        INSERT INTO ecomm.orders (address_id, card_id, customer_id, order_date, total, status)
-//        VALUES(?, ?, ?, ?, ?, ?)
-//        """)
-//                .setParameter(1, m.getAddress().getId())
-//                .setParameter(2, m.getCard().getPublic_id())
-//                .setParameter(3, m.getUser().getPublic_id())
-//                .setParameter(4, orderDate)
-//                .setParameter(5, total)
-//                .setParameter(6, StatusEnum.CREATED.getValue())
-//                .executeUpdate();
-//        Optional<CartEntity> oCart = cartRepository.findByUserId(m.getUser().getPublic_id());
-//        CartEntity cart = oCart.orElseThrow(() -> new ApiException(String.format("Cart not found for given customer (ID: %s)", m.getUser().getPublic_id())));
-//        itemRepository.deleteCartItemJoinById(cart.getItems().stream().map(i -> i.getPublic_id()).collect(toList()), cart.getPublic_id());
-//        OrderEntity entity = (OrderEntity) entityManager.createNativeQuery("""
-//        SELECT o.* FROM ecomm.orders o WHERE o.customer_id = ? AND o.order_date >= ?
-//        """, OrderEntity.class)
-//                .setParameter(1, m.getUser().getPublic_id())
-//                .setParameter(2, OffsetDateTime.ofInstant(orderDate.toInstant(), ZoneId.of("Z")).truncatedTo(
-//                        ChronoUnit.MICROS))
-//                .getSingleResult();
-//        orderItemRepository.saveAll(cart.getItems().stream().map(i -> new OrderItemEntity()
-//                .setOrder(entity.getId()).setItemId(i.getId())).collect(toList()));
-//        return Optional.of(entity);
+        Timestamp orderDate = Timestamp.from(Instant.now());
 
-        return Optional.empty();
+        entityManager.createNativeQuery("""
+        INSERT INTO OrderEntity (address_id, card_id, customer_id, order_date, total, status)
+        VALUES(?, ?, ?, ?, ?, ?)
+        """)
+                .setParameter(1, m.getAddress().getId())
+                .setParameter(2, m.getCard().getId())
+                .setParameter(3, m.getUser().getId())
+                .setParameter(4, orderDate)
+                .setParameter(5, total)
+                .setParameter(6, StatusEnum.NOT_DELIVERED)
+                .executeUpdate();
+        Optional<CartEntity> oCart = cartRepository.findByUserId(m.getUser().getId());
+
+        CartEntity cart = oCart.orElseThrow(() -> new ApiException(String.format("Cart not found for given customer (ID: %s)", m.getUser().getId())));
+        itemRepository.deleteCartItemJoinById(cart.getItems().stream().map(i -> i.getId()).collect(toList()), cart.getId());
+
+        OrderEntity entity = (OrderEntity) entityManager.createNativeQuery("""
+        SELECT o.* FROM OrderEntity o WHERE o.customer_id = ? AND o.order_date >= ?
+        """, OrderEntity.class)
+                .setParameter(1, m.getUser().getId())
+                .setParameter(2, OffsetDateTime.ofInstant(orderDate.toInstant(), ZoneId.of("Z")).truncatedTo(
+                        ChronoUnit.MICROS))
+                .getSingleResult();
+
+        orderItemRepository.saveAll(cart.getItems().stream().map(i -> new OrderItemEntity()
+                .setOrderId(entity.getId()).setItemId(i.getId())).collect(toList()));
+
+        return Optional.of(entity);
     }
 }

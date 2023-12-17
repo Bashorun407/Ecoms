@@ -10,6 +10,6 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface CartRepository extends JpaRepository<CartEntity, UUID> {
-    @Query("SELECT c FROM CartEntity c JOIN c.userEntity u WHERE u.public_id =: userId")
+    @Query("SELECT c FROM CartEntity c JOIN c.userEntity u WHERE u.id =: userId")
     Optional<CartEntity> findByUserId(@Param("userId") UUID userId);
 }

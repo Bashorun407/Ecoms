@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,9 +19,9 @@ public class OrderItemEntity extends BaseInfo implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     @Column(name = "order_id")
-    private OrderEntity order;
+    private UUID orderId;
     @Column(name = "item_id")
-    private ItemEntity item;
+    private UUID itemId;
 
     /**
      * Override Equals and hashCode methods of this class
@@ -38,7 +39,7 @@ public class OrderItemEntity extends BaseInfo implements Serializable {
 
     @Override
     public int hashCode(){
-        return Objects.hash(id, order, item);
+        return Objects.hash(id, orderId, itemId);
     }
 
 }
