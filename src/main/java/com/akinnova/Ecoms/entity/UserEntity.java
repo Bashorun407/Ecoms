@@ -27,11 +27,5 @@ public class UserEntity extends BaseInfo implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private CartEntity cart;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-//    private List<CardEntity> cards;
-//
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-//    private List<OrderEntity> orders;
 
 }

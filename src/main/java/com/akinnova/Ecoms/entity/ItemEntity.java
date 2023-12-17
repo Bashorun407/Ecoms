@@ -20,7 +20,7 @@ public class ItemEntity extends BaseInfo implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "id")
     private ProductEntity product;
 
     private BigDecimal price;
@@ -45,7 +45,7 @@ public class ItemEntity extends BaseInfo implements Serializable {
         if(obj == null || getClass() != obj.getClass())
             return false;
 
-        return public_id != null && public_id.equals(((ItemEntity) obj).public_id);
+        return id != null && id.equals(((ItemEntity) obj).id);
     }
 
     /**

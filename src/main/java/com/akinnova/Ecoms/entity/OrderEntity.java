@@ -26,7 +26,7 @@ public class OrderEntity extends BaseInfo implements Serializable {
     private StatusEnum status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", referencedColumnName = "public_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,15 +34,15 @@ public class OrderEntity extends BaseInfo implements Serializable {
     private AddressEntity address;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_id", referencedColumnName = "public_id")
+    @JoinColumn(name = "payment_id", referencedColumnName = "id")
     private PaymentEntity payment;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shipment_id", referencedColumnName = "public_id")
+    @JoinColumn(name = "shipment_id", referencedColumnName = "id")
     private ShipmentEntity shipment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_id", referencedColumnName = "public_id")
+    @JoinColumn(name = "card_id", referencedColumnName = "id")
     private CardEntity card;
 
     @Column(name = "order_date")
@@ -50,8 +50,8 @@ public class OrderEntity extends BaseInfo implements Serializable {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "orders_items",
-            joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "public_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "public_id")
+            joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id")
     )
     private Set<ItemEntity> items;
 
@@ -69,7 +69,7 @@ public class OrderEntity extends BaseInfo implements Serializable {
         if(obj == null || getClass() != obj.getClass())
             return false;
 
-        return public_id != null && public_id.equals(((OrderEntity) obj).public_id);
+        return id != null && id.equals(((OrderEntity) obj).id);
     }
 
     /**

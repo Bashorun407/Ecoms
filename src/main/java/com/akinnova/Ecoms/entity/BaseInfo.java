@@ -16,7 +16,7 @@ public class BaseInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    protected UUID public_id;
+    protected UUID id;
     protected LocalDateTime createdAt = LocalDateTime.now();
     protected LocalDateTime updatedAt;
 

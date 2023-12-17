@@ -16,13 +16,13 @@ public class CartEntity extends BaseInfo implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "public_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity userEntity;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "cart_item",
-            joinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "public_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "public_id")
+            joinColumns = @JoinColumn(name = "cart_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id")
     )
     private Set<ItemEntity> items = new LinkedHashSet<>();
 
@@ -39,7 +39,7 @@ public class CartEntity extends BaseInfo implements Serializable {
         if(obj == null || getClass() != obj.getClass())
             return false;
 
-        return public_id != null && public_id.equals(((CartEntity) obj).public_id);
+        return id != null && id.equals(((CartEntity) obj).id);
     }
 
     /**

@@ -2,13 +2,11 @@ package com.akinnova.Ecoms.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,13 +33,12 @@ public class OrderItemEntity extends BaseInfo implements Serializable {
         if(obj == null || getClass() != obj.getClass())
             return false;
 
-        return public_id != null && public_id.equals(((OrderItemEntity) obj).public_id);
+        return id != null && id.equals(((OrderItemEntity) obj).id);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hash(public_id, order, item);
+        return Objects.hash(id, order, item);
     }
-
 
 }

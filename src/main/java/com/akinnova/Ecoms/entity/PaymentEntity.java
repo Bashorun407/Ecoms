@@ -34,7 +34,7 @@ public class PaymentEntity extends BaseInfo implements Serializable {
         if(obj == null || getClass() != obj.getClass())
             return false;
 
-        return public_id != null && public_id.equals(((PaymentEntity) obj).public_id);
+        return id != null && id.equals(((PaymentEntity) obj).id);
     }
 
     /**

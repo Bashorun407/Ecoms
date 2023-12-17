@@ -21,7 +21,7 @@ public class AuthorizationEntity implements Serializable {
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id", referencedColumnName = "public_id")
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
     private OrderEntity order;
 
     private boolean authorized;

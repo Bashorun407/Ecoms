@@ -23,7 +23,7 @@ public class CardEntity extends BaseInfo implements Serializable {
     private String cvv;
 
     @OneToOne
-    @JoinColumn(name = "user", referencedColumnName = "public_id")
+    @JoinColumn(name = "user", referencedColumnName = "id")
     private UserEntity user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "card", orphanRemoval = true)
